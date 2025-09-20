@@ -74,8 +74,8 @@ A modern Flutter inventory management application with bilingual support (Englis
    ```
 
 ### Demo Credentials / Thông tin demo
-- **Email**: admin@example.com
-- **Password**: password123
+<!-- - **Email**: admin@example.com
+- **Password**: password123 -->
 
 ## Project Structure / Cấu trúc dự án
 
@@ -177,7 +177,7 @@ For questions or support, please contact [your-email@example.com]
 
 ---
 
-**Note / Lưu ý**: This is a demo application for learning purposes. For production use, additional security measures and backend integration would be required.
+<!-- **Note / Lưu ý**: This is a demo application for learning purposes. For production use, additional security measures and backend integration would be required.
 
-**Ghi chú**: Đây là ứng dụng demo cho mục đích học tập. Để sử dụng trong sản xuất, cần thêm các biện pháp bảo mật và tích hợp backend.
+**Ghi chú**: Đây là ứng dụng demo cho mục đích học tập. Để sử dụng trong sản xuất, cần thêm các biện pháp bảo mật và tích hợp backend. -->
 
