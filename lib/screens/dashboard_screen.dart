@@ -8,6 +8,9 @@ import '../utils/app_localizations.dart';
 import '../widgets/metric_card.dart';
 import '../widgets/recent_activity_card.dart';
 import '../widgets/quick_action_button.dart';
+import 'add_product_screen.dart';
+import 'reports_screen.dart';
+import 'inventory_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -124,18 +127,22 @@ class DashboardScreen extends StatelessWidget {
                   icon: Icons.add,
                   color: Theme.of(context).primaryColor,
                   onTap: () {
-                    // TODO: Navigate to add product screen
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const AddProductScreen(),
+                      ),
+                    );
                   },
                 )
                     .animate(delay: 700.ms)
                     .fadeIn(duration: 600.ms)
                     .slideY(begin: 0.3, end: 0),
                 QuickActionButton(
-                  title: 'Scan Barcode / Quét mã vạch',
-                  icon: Icons.qr_code_scanner,
-                  color: Colors.purple,
+                  title: 'Low Stock / Hàng sắp hết',
+                  icon: Icons.warning,
+                  color: Colors.orange,
                   onTap: () {
-                    // TODO: Implement barcode scanning
+                    _showLowStockAlert(context, inventoryProvider, l10n);
                   },
                 )
                     .animate(delay: 800.ms)
@@ -146,18 +153,26 @@ class DashboardScreen extends StatelessWidget {
                   icon: Icons.analytics,
                   color: Colors.teal,
                   onTap: () {
-                    // TODO: Navigate to reports screen
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ReportsScreen(),
+                      ),
+                    );
                   },
                 )
                     .animate(delay: 900.ms)
                     .fadeIn(duration: 600.ms)
                     .slideY(begin: 0.3, end: 0),
                 QuickActionButton(
-                  title: 'Export / Xuất dữ liệu',
+                  title: 'Export / Xuất báo cáo',
                   icon: Icons.download,
                   color: Colors.indigo,
                   onTap: () {
-                    // TODO: Implement data export
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ReportsScreen(),
+                      ),
+                    );
                   },
                 )
                     .animate(delay: 1000.ms)
@@ -211,6 +226,75 @@ class DashboardScreen extends StatelessWidget {
                 .slideY(begin: 0.3, end: 0),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showLowStockAlert(BuildContext context,
+      InventoryProvider inventoryProvider, AppLocalizations l10n) {
+    final lowStockProducts = inventoryProvider.products
+        .where((product) => product.quantity <= product.minimumQuantity)
+        .toList();
+
+    if (lowStockProducts.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text('No low stock products / Không có sản phẩm sắp hết hàng'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Low Stock Alert / Cảnh báo hàng sắp hết'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: lowStockProducts.length,
+            itemBuilder: (context, index) {
+              final product = lowStockProducts[index];
+              return ListTile(
+                leading: Icon(
+                  Icons.warning,
+                  color: Colors.orange,
+                ),
+                title: Text(product.name),
+                subtitle: Text(
+                    '${product.quantity} left / còn lại (Min: ${product.minimumQuantity})'),
+                trailing: Text(
+                  '\$${product.price.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Close / Đóng'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Navigate to inventory screen with low stock filter
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const InventoryScreen(),
+                ),
+              );
+            },
+            child: Text('View Inventory / Xem kho'),
+          ),
+        ],
       ),
     );
   }

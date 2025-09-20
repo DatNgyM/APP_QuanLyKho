@@ -1,0 +1,1 @@
+ E:\\QuanLyKho\\lib\\l10n\\app_localizations_en.dart E:\\QuanLyKho\\lib\\l10n\\app_localizations_vi.dart E:\\QuanLyKho\\lib\\l10n\\app_localizations.dart:  E:\\QuanLyKho\\l10n.yaml E:\\QuanLyKho\\lib\\l10n\\app_en.arb E:\\QuanLyKho\\lib\\l10n\\app_vi.arb

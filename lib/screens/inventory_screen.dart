@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../providers/inventory_provider.dart';
 import '../providers/language_provider.dart';
+import '../models/product.dart';
 import '../utils/app_localizations.dart';
 import '../widgets/product_card.dart';
 import '../widgets/search_filter_bar.dart';
