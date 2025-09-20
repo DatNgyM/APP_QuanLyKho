@@ -1,4 +1,4 @@
-# Quản Lý Kho / Inventory Management App
+<!-- # Quản Lý Kho / Inventory Management App
 
 A modern Flutter inventory management application with bilingual support (English/Vietnamese).
 
@@ -180,4 +180,4 @@ For questions or support, please contact [your-email@example.com]
 <!-- **Note / Lưu ý**: This is a demo application for learning purposes. For production use, additional security measures and backend integration would be required.
 
 **Ghi chú**: Đây là ứng dụng demo cho mục đích học tập. Để sử dụng trong sản xuất, cần thêm các biện pháp bảo mật và tích hợp backend. -->
-
+ -->
