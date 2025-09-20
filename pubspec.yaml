@@ -1,0 +1,41 @@
+name: quan_ly_kho
+description: Inventory Management App with Bilingual Support
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  provider: ^6.0.5
+  shared_preferences: ^2.2.2
+  intl: ^0.20.2
+  flutter_localizations:
+    sdk: flutter
+  http: ^1.1.0
+  sqflite: ^2.3.0
+  path: ^1.8.3
+  image_picker: ^1.0.4
+  cached_network_image: ^3.3.0
+  flutter_svg: ^2.0.9
+  google_fonts: ^6.1.0
+  flutter_animate: ^4.3.0
+  lottie: ^2.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+  
+  assets:
+    - assets/images/
+    - assets/icons/
