@@ -4,11 +4,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../providers/inventory_provider.dart';
 import '../providers/language_provider.dart';
-import '../models/product.dart';
 import '../utils/app_localizations.dart';
 import '../widgets/product_card.dart';
 import '../widgets/search_filter_bar.dart';
 import 'add_product_screen.dart';
+import 'product_detail_screen.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
@@ -100,10 +100,20 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       return ProductCard(
                         product: product,
                         onTap: () {
-                          // TODO: Navigate to product details
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductDetailScreen(product: product),
+                            ),
+                          );
                         },
                         onEdit: () {
-                          // TODO: Navigate to edit product
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AddProductScreen(product: product),
+                            ),
+                          );
                         },
                         onDelete: () {
                           _showDeleteDialog(context, product, l10n);

@@ -9,7 +9,9 @@ import '../models/product.dart';
 import '../utils/app_localizations.dart';
 
 class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key});
+  final Product? product; // null for add, Product for edit
+
+  const AddProductScreen({super.key, this.product});
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -19,6 +21,27 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _codeController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.product != null) {
+      _initializeForEdit();
+    }
+  }
+
+  void _initializeForEdit() {
+    final product = widget.product!;
+    _nameController.text = product.name;
+    _codeController.text = product.code;
+    _priceController.text = product.price.toString();
+    _quantityController.text = product.quantity.toString();
+    _minimumQuantityController.text = product.minimumQuantity.toString();
+    _supplierController.text = product.supplier;
+    _descriptionController.text = product.description;
+    _selectedCategory = product.category;
+  }
+
   final _priceController = TextEditingController();
   final _quantityController = TextEditingController();
   final _minimumQuantityController = TextEditingController();
@@ -139,29 +162,37 @@ class _AddProductScreenState extends State<AddProductScreen> {
     try {
       final now = DateTime.now();
       final product = Product(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        id: widget.product?.id ??
+            DateTime.now().millisecondsSinceEpoch.toString(),
         name: _nameController.text.trim(),
         code: _codeController.text.trim(),
         category: _selectedCategory,
         quantity: int.parse(_quantityController.text),
         price: double.parse(_priceController.text),
         description: _descriptionController.text.trim(),
-        imageUrl: _selectedImage?.path, // Store local file path for now
+        imageUrl: _selectedImage?.path ??
+            widget.product?.imageUrl, // Store local file path for now
         supplier: _supplierController.text.trim(),
         minimumQuantity: int.parse(_minimumQuantityController.text),
-        dateAdded: now,
+        dateAdded: widget.product?.dateAdded ?? now,
         lastUpdated: now,
       );
 
       final inventoryProvider =
           Provider.of<InventoryProvider>(context, listen: false);
-      await inventoryProvider.addProduct(product);
+
+      if (widget.product == null) {
+        await inventoryProvider.addProduct(product);
+      } else {
+        await inventoryProvider.updateProduct(product);
+      }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                'Product added successfully / Sản phẩm đã được thêm thành công'),
+            content: Text(widget.product == null
+                ? 'Product added successfully / Sản phẩm đã được thêm thành công'
+                : 'Product updated successfully / Sản phẩm đã được cập nhật thành công'),
             backgroundColor: Colors.green,
           ),
         );
@@ -191,7 +222,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.addProduct),
+        title: Text(widget.product == null
+            ? l10n.addProduct
+            : 'Edit Product / Chỉnh sửa sản phẩm'),
         actions: [
           TextButton(
             onPressed: _isLoading ? null : _saveProduct,
