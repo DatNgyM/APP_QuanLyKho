@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 import '../providers/inventory_provider.dart';
 import '../providers/language_provider.dart';
@@ -40,10 +39,11 @@ class DashboardScreen extends StatelessWidget {
             // Welcome Message
             Text(
               '${l10n.welcome}, ${inventoryProvider.totalProducts} ${l10n.products.toLowerCase()}!',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.3, end: 0),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
 
             const SizedBox(height: 24),
 
@@ -54,7 +54,7 @@ class DashboardScreen extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
-              childAspectRatio: 1.8,
+              childAspectRatio: 1.4, // Adjusted for smaller cards
               children: [
                 MetricCard(
                   title: l10n.totalProducts,
@@ -62,55 +62,39 @@ class DashboardScreen extends StatelessWidget {
                   icon: Icons.inventory_2,
                   color: Colors.blue,
                   trend: '+12%',
-                ).animate(delay: 200.ms).fadeIn(duration: 600.ms).scale(
-                      begin: const Offset(0.8, 0.8),
-                      end: const Offset(1, 1),
-                    ),
+                ),
                 MetricCard(
                   title: l10n.lowStock,
                   value: inventoryProvider.lowStockCount.toString(),
                   icon: Icons.warning,
                   color: Colors.orange,
                   trend: '-5%',
-                ).animate(delay: 300.ms).fadeIn(duration: 600.ms).scale(
-                      begin: const Offset(0.8, 0.8),
-                      end: const Offset(1, 1),
-                    ),
+                ),
                 MetricCard(
                   title: l10n.outOfStock,
                   value: inventoryProvider.outOfStockCount.toString(),
                   icon: Icons.error,
                   color: Colors.red,
                   trend: '+2%',
-                ).animate(delay: 400.ms).fadeIn(duration: 600.ms).scale(
-                      begin: const Offset(0.8, 0.8),
-                      end: const Offset(1, 1),
-                    ),
+                ),
                 MetricCard(
                   title: 'Total Value / Tổng giá trị',
                   value: '\$${inventoryProvider.totalValue.toStringAsFixed(0)}',
                   icon: Icons.attach_money,
                   color: Colors.green,
                   trend: '+8%',
-                ).animate(delay: 500.ms).fadeIn(duration: 600.ms).scale(
-                      begin: const Offset(0.8, 0.8),
-                      end: const Offset(1, 1),
-                    ),
+                ),
               ],
             ),
-
-            const SizedBox(height: 32),
 
             // Quick Actions
             Text(
               'Quick Actions / Hành động nhanh',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            )
-                .animate(delay: 600.ms)
-                .fadeIn(duration: 600.ms)
-                .slideX(begin: -0.3, end: 0),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
 
             const SizedBox(height: 16),
 
@@ -133,10 +117,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     );
                   },
-                )
-                    .animate(delay: 700.ms)
-                    .fadeIn(duration: 600.ms)
-                    .slideY(begin: 0.3, end: 0),
+                ),
                 QuickActionButton(
                   title: 'Low Stock / Hàng sắp hết',
                   icon: Icons.warning,
@@ -144,10 +125,7 @@ class DashboardScreen extends StatelessWidget {
                   onTap: () {
                     _showLowStockAlert(context, inventoryProvider, l10n);
                   },
-                )
-                    .animate(delay: 800.ms)
-                    .fadeIn(duration: 600.ms)
-                    .slideY(begin: 0.3, end: 0),
+                ),
                 QuickActionButton(
                   title: l10n.reports,
                   icon: Icons.analytics,
@@ -159,10 +137,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     );
                   },
-                )
-                    .animate(delay: 900.ms)
-                    .fadeIn(duration: 600.ms)
-                    .slideY(begin: 0.3, end: 0),
+                ),
                 QuickActionButton(
                   title: 'Export / Xuất báo cáo',
                   icon: Icons.download,
@@ -174,10 +149,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     );
                   },
-                )
-                    .animate(delay: 1000.ms)
-                    .fadeIn(duration: 600.ms)
-                    .slideY(begin: 0.3, end: 0),
+                ),
               ],
             ),
 
@@ -186,13 +158,11 @@ class DashboardScreen extends StatelessWidget {
             // Recent Activity
             Text(
               l10n.recentActivity,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            )
-                .animate(delay: 1100.ms)
-                .fadeIn(duration: 600.ms)
-                .slideX(begin: -0.3, end: 0),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
 
             const SizedBox(height: 16),
 
@@ -220,10 +190,7 @@ class DashboardScreen extends StatelessWidget {
                   color: Colors.blue,
                 ),
               ],
-            )
-                .animate(delay: 1200.ms)
-                .fadeIn(duration: 600.ms)
-                .slideY(begin: 0.3, end: 0),
+            ),
           ],
         ),
       ),

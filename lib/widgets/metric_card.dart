@@ -20,6 +20,9 @@ class MetricCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -29,7 +32,7 @@ class MetricCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(icon, color: color, size: 20),
+                Icon(icon, color: color, size: 26),
                 if (trend != null)
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -47,7 +50,7 @@ class MetricCard extends StatelessWidget {
                       style: TextStyle(
                         color:
                             trend!.startsWith('+') ? Colors.green : Colors.red,
-                        fontSize: 10,
+                        fontSize: 9,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -55,25 +58,26 @@ class MetricCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 6),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-            const SizedBox(height: 1),
-            Flexible(
+            Expanded(
               child: Text(
-                title,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(
-                        context,
-                      ).textTheme.bodySmall?.color?.withOpacity(0.7),
+                value,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                      fontSize: 22,
                     ),
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
+            ),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 10,
+                  ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
