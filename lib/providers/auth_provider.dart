@@ -1,83 +1,83 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../services/supabase_service.dart';
 
 class AuthProvider extends ChangeNotifier {
-  bool _isAuthenticated = false;
-  String? _userEmail;
-  String? _userName;
-  static const String _authKey = 'is_authenticated';
-  static const String _emailKey = 'user_email';
-  static const String _nameKey = 'user_name';
+  User? _currentUser;
+  bool _isLoading = false;
 
-  bool get isAuthenticated => _isAuthenticated;
-  String? get userEmail => _userEmail;
-  String? get userName => _userName;
+  User? get currentUser => _currentUser;
+  bool get isAuthenticated => _currentUser != null;
+  String? get userEmail => _currentUser?.email;
+  String? get userName => _currentUser?.userMetadata?['full_name'] ?? _currentUser?.email?.split('@')[0];
+  bool get isLoading => _isLoading;
 
   AuthProvider() {
-    _loadAuthState();
+    _initialize();
   }
 
-  Future<void> _loadAuthState() async {
-    final prefs = await SharedPreferences.getInstance();
-    _isAuthenticated = prefs.getBool(_authKey) ?? false;
-    _userEmail = prefs.getString(_emailKey);
-    _userName = prefs.getString(_nameKey);
-    notifyListeners();
+  void _initialize() {
+    // Get current user
+    _currentUser = SupabaseService.client.auth.currentUser;
+    
+    // Listen to auth state changes
+    SupabaseService.client.auth.onAuthStateChange.listen((data) {
+      _currentUser = data.session?.user;
+      notifyListeners();
+    });
   }
+
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
 
   Future<bool> login(String email, String password) async {
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 1));
-
-    // Simple validation for demo
-    if (email.isNotEmpty && password.isNotEmpty) {
-      _isAuthenticated = true;
-      _userEmail = email;
-      _userName = email.split('@')[0]; // Simple username extraction
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool(_authKey, true);
-      await prefs.setString(_emailKey, email);
-      await prefs.setString(_nameKey, _userName!);
-
+    try {
+      _isLoading = true;
+      _errorMessage = null;
       notifyListeners();
-      return true;
+
+      final response = await SupabaseService().signInWithEmail(email, password);
+      _currentUser = response.user;
+      
+      _isLoading = false;
+      notifyListeners();
+      return response.user != null;
+    } catch (e) {
+      _isLoading = false;
+      _errorMessage = e.toString();
+      notifyListeners();
+      debugPrint('Login error: $e');
+      return false;
     }
-    return false;
-  }
-
-  Future<void> logout() async {
-    _isAuthenticated = false;
-    _userEmail = null;
-    _userName = null;
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_authKey);
-    await prefs.remove(_emailKey);
-    await prefs.remove(_nameKey);
-
-    notifyListeners();
   }
 
   Future<bool> register(String email, String password, String name) async {
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 1));
-
-    // Simple validation for demo
-    if (email.isNotEmpty && password.isNotEmpty && name.isNotEmpty) {
-      _isAuthenticated = true;
-      _userEmail = email;
-      _userName = name;
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool(_authKey, true);
-      await prefs.setString(_emailKey, email);
-      await prefs.setString(_nameKey, name);
-
+    try {
+      _isLoading = true;
       notifyListeners();
-      return true;
+
+      final response = await SupabaseService().signUpWithEmail(email, password, name);
+      _currentUser = response.user;
+      
+      _isLoading = false;
+      notifyListeners();
+      return response.user != null;
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      debugPrint('Register error: $e');
+      return false;
     }
-    return false;
+  }
+
+  Future<void> logout() async {
+    try {
+      await SupabaseService().signOut();
+      _currentUser = null;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Logout error: $e');
+    }
   }
 }
 

@@ -51,13 +51,133 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(builder: (context) => const MainScreen()),
       );
     } else if (mounted) {
+      final errorMsg = authProvider.errorMessage ?? AppLocalizations.of(context).invalidCredentials;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context).invalidCredentials),
+          content: Text(errorMsg),
           backgroundColor: Theme.of(context).colorScheme.error,
+          duration: const Duration(seconds: 5),
         ),
       );
     }
+  }
+
+  void _showRegisterDialog() {
+    final nameController = TextEditingController();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    bool isRegistering = false;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Sign Up / Đăng ký'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Full Name / Họ tên',
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    prefixIcon: Icon(Icons.email),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Password / Mật khẩu',
+                    prefixIcon: Icon(Icons.lock),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: isRegistering ? null : () => Navigator.pop(context),
+              child: const Text('Cancel / Hủy'),
+            ),
+            ElevatedButton(
+              onPressed: isRegistering
+                  ? null
+                  : () async {
+                      if (nameController.text.isEmpty ||
+                          emailController.text.isEmpty ||
+                          passwordController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Please fill all fields / Vui lòng điền đầy đủ thông tin'),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                        return;
+                      }
+
+                      setDialogState(() {
+                        isRegistering = true;
+                      });
+
+                      final authProvider =
+                          Provider.of<AuthProvider>(context, listen: false);
+                      final success = await authProvider.register(
+                        emailController.text.trim(),
+                        passwordController.text,
+                        nameController.text.trim(),
+                      );
+
+                      if (success && mounted) {
+                        Navigator.pop(context); // Close dialog
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Account created successfully! / Tạo tài khoản thành công!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        // Auto navigate to main screen
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context) => const MainScreen()),
+                        );
+                      } else if (mounted) {
+                        setDialogState(() {
+                          isRegistering = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Registration failed. Please try again. / Đăng ký thất bại.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+              child: isRegistering
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('Sign Up / Đăng ký'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -269,7 +389,30 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     const SizedBox(height: 24),
 
-                    // Demo Credentials Info
+                    // Sign Up Section
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account? / Chưa có tài khoản?",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        TextButton(
+                          onPressed: _showRegisterDialog,
+                          child: Text(
+                            'Sign Up / Đăng ký',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ).animate(delay: 1000.ms).fadeIn(duration: 800.ms),
+
+                    const SizedBox(height: 8),
+
+                    // Info box
                     Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
@@ -283,21 +426,27 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: Column(
                             children: [
+                              Icon(
+                                Icons.info_outline,
+                                color: Theme.of(context).primaryColor,
+                                size: 32,
+                              ),
+                              const SizedBox(height: 8),
                               Text(
-                                'Demo Credentials / Thông tin demo:',
+                                'ℹ️ New User? / Người dùng mới?',
                                 style: Theme.of(context).textTheme.titleSmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Email: admin@example.com\nPassword: password123',
+                                'Please Sign Up to create your account.\nVui lòng Đăng ký để tạo tài khoản.',
                                 style: Theme.of(context).textTheme.bodySmall,
                                 textAlign: TextAlign.center,
                               ),
                             ],
                           ),
                         )
-                        .animate(delay: 1000.ms)
+                        .animate(delay: 1100.ms)
                         .fadeIn(duration: 800.ms)
                         .slideY(begin: 0.3, end: 0),
                   ],

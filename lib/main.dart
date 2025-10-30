@@ -7,10 +7,16 @@ import 'providers/theme_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/inventory_provider.dart';
 import 'screens/splash_screen.dart';
+import 'services/supabase_service.dart';
 import 'utils/app_localizations.dart';
 import 'utils/app_theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Supabase
+  await SupabaseService.initialize();
+  
   runApp(const MyApp());
 }
 

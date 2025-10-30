@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../services/temp_storage_service.dart';
+import '../services/supabase_service.dart';
 import '../models/product.dart';
 
 class InventoryProvider extends ChangeNotifier {
-  final TempStorageService _storage = TempStorageService.instance;
+  final SupabaseService _supabaseService = SupabaseService();
   List<Product> _products = [];
   String _searchQuery = '';
   String _selectedCategory = 'All';
@@ -40,9 +40,10 @@ class InventoryProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _products = await _storage.getAllProducts();
+      _products = await _supabaseService.getProducts();
     } catch (e) {
       debugPrint('Error loading products: $e');
+      _products = []; // Reset về empty nếu lỗi
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -121,7 +122,7 @@ class InventoryProvider extends ChangeNotifier {
   // Product CRUD operations
   Future<String> addProduct(Product product) async {
     try {
-      final id = await _storage.saveProduct(product);
+      final id = await _supabaseService.addProduct(product);
       await _loadProducts();
       return id;
     } catch (e) {
@@ -132,7 +133,7 @@ class InventoryProvider extends ChangeNotifier {
 
   Future<void> updateProduct(Product product) async {
     try {
-      await _storage.saveProduct(product);
+      await _supabaseService.updateProduct(product);
       await _loadProducts();
     } catch (e) {
       debugPrint('Error updating product: $e');
@@ -142,7 +143,7 @@ class InventoryProvider extends ChangeNotifier {
 
   Future<void> deleteProduct(String productId) async {
     try {
-      await _storage.deleteProduct(productId);
+      await _supabaseService.deleteProduct(productId);
       await _loadProducts();
     } catch (e) {
       debugPrint('Error deleting product: $e');
@@ -152,16 +153,18 @@ class InventoryProvider extends ChangeNotifier {
 
   // Statistics methods
   Future<Map<String, dynamic>> getStatistics() async {
-    return await _storage.getStatistics();
+    return await _supabaseService.getStatistics();
   }
 
   Future<List<Map<String, dynamic>>> getRevenueData({int days = 30}) async {
-    return await _storage.getRevenueData(days: days);
+    // TODO: Implement with Supabase
+    return [];
   }
 
   // Export data
   Future<Map<String, dynamic>> exportData() async {
-    return await _storage.exportData();
+    // TODO: Implement with Supabase
+    return {};
   }
 
   // Refresh data
