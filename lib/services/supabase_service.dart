@@ -1,5 +1,4 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../config/supabase_config.dart';
 import '../models/product.dart';
 
 class SupabaseService {
@@ -8,14 +7,6 @@ class SupabaseService {
   SupabaseService._internal();
 
   static SupabaseClient get client => Supabase.instance.client;
-
-  /// Initialize Supabase - Gọi ở main.dart
-  static Future<void> initialize() async {
-    await Supabase.initialize(
-      url: SupabaseConfig.supabaseUrl,
-      anonKey: SupabaseConfig.supabaseAnonKey,
-    );
-  }
 
   // ==================== AUTH METHODS ====================
 
