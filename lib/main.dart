@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'config/supabase_env.dart';
 import 'providers/language_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/auth_provider.dart';
@@ -14,11 +15,10 @@ import 'utils/app_theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Supabase
+  // Initialize Supabase (Credentials từ file riêng - AN TOÀN!)
   await Supabase.initialize(
-    url: 'https://tnctyxsglejxdkqdkedd.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRuY3R5eHNnbGVqeGRrcWRrZWRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc3Mzg1MDIsImV4cCI6MjA3MzMxNDUwMn0._6ASwFIDcaqOV2dP5-1CPskP9GRfHHIUtnoCJqJQD6g',
+    url: SupabaseEnv.supabaseUrl,
+    anonKey: SupabaseEnv.supabaseAnonKey,
   );
 
   runApp(const MyApp());
