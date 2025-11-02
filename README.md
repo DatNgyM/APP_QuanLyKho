@@ -49,33 +49,60 @@ A modern Flutter inventory management application with bilingual support (Englis
 
 ## Getting Started / Bắt đầu
 
+### ⚡ Quick Start (2 minutes)
+
+1. **Install & Run**
+   ```bash
+   flutter pub get
+   flutter run
+   ```
+
+2. **Sign Up** trong app
+   - Email: test@example.com
+   - Password: 123456
+
+3. **Done!** 🎉
+
+📖 **Chi tiết:** Xem `QUICK_START.md`
+
+---
+
+### 📦 Add Mockup Data (10 products) - 2 CÁCH
+
+#### ⚡ **CÁCH 1: Tự động trong Flutter** (Recommended - KHÔNG CẦN SQL!)
+
+App sẽ **TỰ ĐỘNG** tạo 10 products + 8 activities khi:
+- Database rỗng (lần đầu login)
+- Hoặc click nút "Load Mockup" trong Dashboard
+
+**Không cần làm gì!** Chỉ cần Login → Tự động có data! 🎉
+
+📖 **Chi tiết:** Xem `MOCKUP_FLUTTER_GUIDE.md`
+
+---
+
+#### 🗄️ **CÁCH 2: Chạy SQL** (Nếu muốn)
+
+1. **Get User ID:**
+   - [Supabase Dashboard](https://app.supabase.com) → Authentication → Users → Copy UUID
+
+2. **Run SQL:**
+   - Mở `supabase_seed_data.sql`
+   - Replace `YOUR_USER_ID` → (UUID của bạn)
+   - Supabase → SQL Editor → Paste → Run
+
+3. **Restart app**
+
+📖 **Chi tiết:** Xem `HUONG_DAN_TAO_DU_LIEU_MAU.md`
+
+---
+
 ### Prerequisites / Yêu cầu hệ thống
 - Flutter SDK (3.0.0 or higher)
 - Dart SDK (3.0.0 or higher)
 - Android Studio / VS Code
 - Android device or emulator / iOS simulator
-
-### Installation / Cài đặt
-
-1. **Clone the repository / Sao chép repository**
-   ```bash
-   git clone <repository-url>
-   cd quan_ly_kho
-   ```
-
-2. **Install dependencies / Cài đặt dependencies**
-   ```bash
-   flutter pub get
-   ```
-
-3. **Run the app / Chạy ứng dụng**
-   ```bash
-   flutter run
-   ```
-
-### Demo Credentials / Thông tin demo
-<!-- - **Email**: admin@example.com
-- **Password**: password123 -->
+- ✅ **Supabase account** (Free tier OK)
 
 ## Project Structure / Cấu trúc dự án
 
@@ -114,10 +141,12 @@ lib/
 
 - **Flutter**: Cross-platform mobile development
 - **Provider**: State management
+- **Supabase**: Backend as a Service (Auth + Database + Real-time)
 - **Google Fonts**: Typography
 - **Flutter Animate**: Smooth animations
 - **Shared Preferences**: Local storage
 - **Intl**: Internationalization support
+- **PDF/CSV Export**: Reports generation
 
 ## Features in Detail / Chi tiết tính năng
 
@@ -146,18 +175,52 @@ lib/
 - Search and filtering capabilities
 - Category-based organization
 
+## 📚 Documentation
+
+### Quick Start:
+- **`QUICK_START.md`** - Start using app in 2 minutes ⚡
+- **`MOCKUP_FLUTTER_GUIDE.md`** - Auto mockup data (NO SQL needed!) 🎨
+
+### Detailed Guides:
+- **`HUONG_DAN_TAO_DU_LIEU_MAU.md`** - Detailed setup guide (Vietnamese)
+- **`SETUP_DASHBOARD.md`** - Dashboard setup summary
+- **`DASHBOARD_COMPLETE.md`** - Dashboard completion report
+- **`MOCKUP_COMPLETE.md`** - Mockup system completion report
+
+### SQL Scripts:
+- **`supabase_seed_data.sql`** - Sample data (10 products)
+- **`supabase_full_schema_seed.sql`** - Full schema với 20 products
+
+### Configuration:
+- **`SUPABASE_SETUP.md`** - Supabase configuration guide
+
+---
+
+## ✨ Completed Features
+
+- [x] **Supabase integration** (Auth + Database + Real-time)
+- [x] **User authentication** (Sign up, Login, Logout)
+- [x] **Product management** (CRUD operations)
+- [x] **Image upload** for products
+- [x] **Search, Filter, Sort** functionality
+- [x] **Dashboard** with metrics and activities
+- [x] **Reports & Analytics** with charts
+- [x] **Export to PDF/CSV**
+- [x] **Bilingual support** (Vietnamese/English)
+- [x] **Dark/Light theme**
+- [x] **Row Level Security** (RLS)
+- [x] **Real-time data sync**
+- [x] **Developer tools** (Test connection)
+
 ## Future Enhancements / Cải tiến tương lai
 
-- [ ] Database integration (SQLite/Firebase)
 - [ ] Barcode scanning functionality
-- [ ] Image upload for products
-- [ ] Advanced reporting features
-- [ ] User authentication with backend
+- [ ] Advanced charts & analytics
 - [ ] Push notifications
-- [ ] Offline support
-- [ ] Data synchronization
-- [ ] Multi-user support
-- [ ] API integration
+- [ ] Offline support with local cache
+- [ ] Bulk import/export
+- [ ] Multi-warehouse support
+- [ ] Role-based access control
 
 ## Contributing / Đóng góp
 

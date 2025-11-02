@@ -6,6 +6,7 @@ import '../providers/language_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/auth_provider.dart';
 import '../utils/app_localizations.dart';
+import '../utils/supabase_test_helper.dart';
 import 'login_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -202,6 +203,43 @@ class SettingsScreen extends StatelessWidget {
                 .fadeIn(duration: 600.ms)
                 .slideX(begin: -0.3, end: 0),
 
+            const SizedBox(height: 24),
+
+            // Developer Tools Section
+            Text(
+              'Developer Tools / Công cụ Developer',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            )
+                .animate(delay: 750.ms)
+                .fadeIn(duration: 600.ms)
+                .slideX(begin: -0.3, end: 0),
+
+            const SizedBox(height: 16),
+
+            // Test Supabase Connection
+            Card(
+              color: Colors.blue.shade50,
+              child: ListTile(
+                leading: const Icon(Icons.cloud_done, color: Colors.blue),
+                title: const Text(
+                  'Test Supabase Connection',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: const Text(
+                  'Check database connection / Kiểm tra kết nối database',
+                ),
+                trailing: const Icon(Icons.play_arrow, color: Colors.blue),
+                onTap: () {
+                  SupabaseTestHelper.showTestDialog(context);
+                },
+              ),
+            )
+                .animate(delay: 800.ms)
+                .fadeIn(duration: 600.ms)
+                .slideX(begin: -0.3, end: 0),
+
             const SizedBox(height: 32),
 
             // Logout Button
@@ -218,7 +256,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
             )
-                .animate(delay: 800.ms)
+                .animate(delay: 900.ms)
                 .fadeIn(duration: 600.ms)
                 .slideY(begin: 0.3, end: 0),
           ],

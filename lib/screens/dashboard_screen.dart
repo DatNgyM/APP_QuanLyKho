@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/inventory_provider.dart';
 import '../providers/language_provider.dart';
 import '../services/supabase_service.dart';
+import '../services/local_mockup_service.dart';
 import '../utils/app_localizations.dart';
 import '../widgets/metric_card.dart';
 import '../widgets/recent_activity_card.dart';
@@ -26,7 +27,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _loadRecentActivities();
+    _initializeData();
+  }
+
+  /// 🎯 Khởi tạo data - Dùng LOCAL MOCKUP
+  Future<void> _initializeData() async {
+    debugPrint('🚀 Dashboard: Initialize với LOCAL MOCKUP data...');
+    
+    // Load data (InventoryProvider sẽ tự động dùng local mockup nếu Supabase lỗi)
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+    await inventoryProvider.refresh();
+    
+    // Load activities
+    await _loadRecentActivities();
+    
+    debugPrint('✅ Dashboard initialized successfully!');
   }
 
   Future<void> _loadRecentActivities() async {
@@ -35,14 +50,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
 
     try {
+      // Thử load từ Supabase trước
       final activities = await SupabaseService().getRecentActivities(limit: 5);
       if (mounted) {
         setState(() {
           _recentActivities = activities;
         });
       }
+      debugPrint('✅ Loaded ${activities.length} activities from Supabase');
     } catch (e) {
-      debugPrint('Error loading activities: $e');
+      debugPrint('⚠️ Error loading activities from Supabase: $e');
+      debugPrint('📦 Using LOCAL MOCKUP activities instead...');
+      
+      // Nếu lỗi, dùng LOCAL MOCKUP ACTIVITIES
+      if (mounted) {
+        setState(() {
+          _recentActivities = LocalMockupService.getLocalMockActivities();
+        });
+      }
+      debugPrint('✅ Loaded ${_recentActivities.length} LOCAL mockup activities');
     } finally {
       if (mounted) {
         setState(() {

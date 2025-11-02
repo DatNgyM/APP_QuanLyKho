@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/supabase_service.dart';
+import '../services/local_mockup_service.dart';
 import '../models/product.dart';
 
 class InventoryProvider extends ChangeNotifier {
@@ -40,10 +41,16 @@ class InventoryProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      // Thử load từ Supabase trước
       _products = await _supabaseService.getProducts();
+      debugPrint('✅ Loaded ${_products.length} products from Supabase');
     } catch (e) {
-      debugPrint('Error loading products: $e');
-      _products = []; // Reset về empty nếu lỗi
+      debugPrint('⚠️ Error loading from Supabase: $e');
+      debugPrint('📦 Using LOCAL MOCKUP data instead...');
+      
+      // Nếu lỗi, dùng LOCAL MOCKUP DATA
+      _products = LocalMockupService.getLocalMockProducts();
+      debugPrint('✅ Loaded ${_products.length} LOCAL mockup products');
     } finally {
       _isLoading = false;
       notifyListeners();
