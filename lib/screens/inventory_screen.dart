@@ -53,45 +53,120 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
           // Products List
           Expanded(
-            child: inventoryProvider.products.isEmpty
-                ? Center(
+            child: inventoryProvider.isLoading
+                ? const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.inventory_2_outlined,
-                          size: 80,
-                          color: Theme.of(
-                            context,
-                          ).primaryColor.withOpacity(0.3),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.noData,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).textTheme.bodyMedium?.color?.withOpacity(0.7),
-                              ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'No products found / Không tìm thấy sản phẩm',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).textTheme.bodyMedium?.color?.withOpacity(0.5),
-                              ),
-                        ),
+                        CircularProgressIndicator(),
+                        SizedBox(height: 16),
+                        Text('Đang tải dữ liệu từ Supabase...'),
                       ],
                     ),
                   )
+                : inventoryProvider.hasError
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.cloud_off,
+                                size: 80,
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                '❌ Lỗi Tải Dữ Liệu',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(
+                                      color: Theme.of(context).colorScheme.error,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                              const SizedBox(height: 16),
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .error
+                                      .withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .error
+                                        .withOpacity(0.3),
+                                  ),
+                                ),
+                                child: Text(
+                                  inventoryProvider.errorMessage ?? 
+                                      'Không thể tải dữ liệu từ Supabase',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  inventoryProvider.refresh();
+                                },
+                                icon: const Icon(Icons.refresh),
+                                label: const Text('Thử Lại'),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 32,
+                                    vertical: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : inventoryProvider.products.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.inventory_2_outlined,
+                                  size: 80,
+                                  color: Theme.of(
+                                    context,
+                                  ).primaryColor.withOpacity(0.3),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  l10n.noData,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                                      ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'No products found / Không tìm thấy sản phẩm',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium?.color?.withOpacity(0.5),
+                                      ),
+                                ),
+                              ],
+                            ),
+                          )
                 : ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: inventoryProvider.products.length,

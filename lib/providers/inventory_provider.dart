@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import '../services/supabase_service.dart';
-import '../services/local_mockup_service.dart';
 import '../models/product.dart';
+import '../models/category.dart';
+import '../models/brand.dart';
 
 class InventoryProvider extends ChangeNotifier {
   final SupabaseService _supabaseService = SupabaseService();
   List<Product> _products = [];
+  List<Category> _categories = [];
+  List<Brand> _brands = [];
   String _searchQuery = '';
   String _selectedCategory = 'All';
   String _sortBy = 'name';
   bool _sortAscending = true;
   bool _isLoading = false;
+  bool _hasError = false;
+  String? _errorMessage;
 
   // Getters
   List<Product> get products => _getFilteredProducts();
-  List<String> get categories =>
-      ['All', 'Electronics', 'Clothing', 'Books', 'Food', 'Other'];
+  List<String> get categories {
+    final List<String> categoryNames = ['All'];
+    categoryNames.addAll(_categories.map((c) => c.name).toList());
+    return categoryNames;
+  }
   List<String> get sortOptions =>
       ['name', 'price', 'quantity', 'dateAdded', 'lastUpdated'];
   String get searchQuery => _searchQuery;
@@ -23,6 +31,10 @@ class InventoryProvider extends ChangeNotifier {
   String get sortBy => _sortBy;
   bool get sortAscending => _sortAscending;
   bool get isLoading => _isLoading;
+  bool get hasError => _hasError;
+  String? get errorMessage => _errorMessage;
+  List<Category> get categoriesList => _categories;
+  List<Brand> get brandsList => _brands;
 
   // Statistics
   int get totalProducts => _products.length;
@@ -38,19 +50,41 @@ class InventoryProvider extends ChangeNotifier {
 
   Future<void> _loadProducts() async {
     _isLoading = true;
+    _hasError = false;
+    _errorMessage = null;
     notifyListeners();
 
     try {
-      // Thử load từ Supabase trước
+      debugPrint('🔄 Starting data sync from Supabase...');
+      
+      // Load categories và brands trước
+      _categories = await _supabaseService.getCategories();
+      _brands = await _supabaseService.getBrands();
+      debugPrint('✅ Loaded ${_categories.length} categories, ${_brands.length} brands');
+      
+      // Load products từ Supabase
       _products = await _supabaseService.getProducts();
       debugPrint('✅ Loaded ${_products.length} products from Supabase');
-    } catch (e) {
-      debugPrint('⚠️ Error loading from Supabase: $e');
-      debugPrint('📦 Using LOCAL MOCKUP data instead...');
+      debugPrint('🎉 SYNC COMPLETE! Categories: ${_categories.length}, Brands: ${_brands.length}, Products: ${_products.length}');
       
-      // Nếu lỗi, dùng LOCAL MOCKUP DATA
-      _products = LocalMockupService.getLocalMockProducts();
-      debugPrint('✅ Loaded ${_products.length} LOCAL mockup products');
+      // Reset error state nếu thành công
+      _hasError = false;
+      _errorMessage = null;
+    } catch (e) {
+      // ❌ LỖI: Không thể tải dữ liệu từ Supabase
+      debugPrint('❌ ERROR loading from Supabase: $e');
+      _hasError = true;
+      _errorMessage = 'Không thể tải dữ liệu từ Supabase.\n\n'
+          'Vui lòng kiểm tra:\n'
+          '• Kết nối internet\n'
+          '• Cấu hình Supabase\n'
+          '• Database có dữ liệu\n\n'
+          'Lỗi: ${e.toString()}';
+      
+      // Clear data
+      _products = [];
+      _categories = [];
+      _brands = [];
     } finally {
       _isLoading = false;
       notifyListeners();

@@ -19,11 +19,15 @@ class RecentActivityCard extends StatelessWidget {
               children: [
                 Icon(Icons.history, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
-                Text(
-                  'Recent Activity / Hoạt động gần đây',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                Expanded(
+                  child: Text(
+                    'Recent Activity / Hoạt động gần đây',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

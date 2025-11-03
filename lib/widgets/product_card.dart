@@ -72,23 +72,105 @@ class ProductCard extends StatelessWidget {
 
                         const SizedBox(height: 4),
 
-                        // Category
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).primaryColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
+                        // Rating & Reviews
+                        if (product.rating > 0 || product.reviews > 0)
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                size: 16,
+                                color: Colors.amber[600],
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${product.rating.toStringAsFixed(1)}',
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                              if (product.reviews > 0) ...[
+                                const SizedBox(width: 4),
+                                Text(
+                                  '(${product.reviews})',
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.color
+                                            ?.withOpacity(0.6),
+                                      ),
+                                ),
+                              ],
+                            ],
                           ),
-                          child: Text(
-                            product.category,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
+
+                        const SizedBox(height: 4),
+
+                        // Badges & Category
+                        Wrap(
+                          spacing: 4,
+                          runSpacing: 4,
+                          children: [
+                            // Category Badge
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color:
+                                    Theme.of(context).primaryColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                product.category,
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
-                          ),
+                            
+                            // Discount Badge
+                            if (product.discount > 0)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  '-${product.discount}%',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              
+                            // Other Badges (Hot, Sale, New)
+                            ...product.badges.take(2).map((badge) => Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: _getBadgeColor(badge).withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: _getBadgeColor(badge),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                badge,
+                                style: TextStyle(
+                                  color: _getBadgeColor(badge),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            )),
+                          ],
                         ),
                       ],
                     ),
@@ -313,6 +395,26 @@ class ProductCard extends StatelessWidget {
       return '${difference.inDays} days ago';
     } else {
       return '${date.day}/${date.month}/${date.year}';
+    }
+  }
+
+  Color _getBadgeColor(String badge) {
+    switch (badge.toLowerCase()) {
+      case 'hot':
+        return Colors.red;
+      case 'sale':
+        return Colors.orange;
+      case 'new':
+        return Colors.green;
+      case 'best seller':
+      case 'best price':
+        return Colors.blue;
+      case 'premium':
+        return Colors.purple;
+      case 'gaming':
+        return Colors.deepPurple;
+      default:
+        return Colors.grey;
     }
   }
 }

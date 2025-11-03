@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/inventory_provider.dart';
 import '../providers/language_provider.dart';
-import '../services/supabase_service.dart';
-import '../services/local_mockup_service.dart';
+import '../services/auto_sync_service.dart';
 import '../utils/app_localizations.dart';
 import '../widgets/metric_card.dart';
 import '../widgets/recent_activity_card.dart';
@@ -23,6 +22,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   List<Map<String, dynamic>> _recentActivities = [];
   bool _isLoadingActivities = false;
+  final AutoSyncService _syncService = AutoSyncService();
+  bool _isSyncing = false;
 
   @override
   void initState() {
@@ -30,18 +31,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _initializeData();
   }
 
-  /// 🎯 Khởi tạo data - Dùng LOCAL MOCKUP
+  /// 🎯 Khởi tạo data từ Supabase
   Future<void> _initializeData() async {
-    debugPrint('🚀 Dashboard: Initialize với LOCAL MOCKUP data...');
-    
-    // Load data (InventoryProvider sẽ tự động dùng local mockup nếu Supabase lỗi)
-    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+    debugPrint('🚀 Dashboard: Initialize from Supabase...');
+
+    // Load data từ Supabase
+    final inventoryProvider =
+        Provider.of<InventoryProvider>(context, listen: false);
     await inventoryProvider.refresh();
-    
+
     // Load activities
     await _loadRecentActivities();
-    
-    debugPrint('✅ Dashboard initialized successfully!');
+
+    debugPrint(' Dashboard initialized!');
   }
 
   Future<void> _loadRecentActivities() async {
@@ -50,31 +52,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
 
     try {
-      // Thử load từ Supabase trước
-      final activities = await SupabaseService().getRecentActivities(limit: 5);
+      //  Không load từ Supabase - để activities trống (tối ưu)
+      // Activities sẽ tự động được lưu local khi có thao tác trong app
       if (mounted) {
         setState(() {
-          _recentActivities = activities;
+          _recentActivities = [];
         });
       }
-      debugPrint('✅ Loaded ${activities.length} activities from Supabase');
-    } catch (e) {
-      debugPrint('⚠️ Error loading activities from Supabase: $e');
-      debugPrint('📦 Using LOCAL MOCKUP activities instead...');
-      
-      // Nếu lỗi, dùng LOCAL MOCKUP ACTIVITIES
-      if (mounted) {
-        setState(() {
-          _recentActivities = LocalMockupService.getLocalMockActivities();
-        });
-      }
-      debugPrint('✅ Loaded ${_recentActivities.length} LOCAL mockup activities');
+      debugPrint('ℹ️ Activities không dùng Supabase (tối ưu)');
     } finally {
       if (mounted) {
         setState(() {
           _isLoadingActivities = false;
         });
       }
+    }
+  }
+
+  /// 🔄 Manual Sync từ Supabase
+  Future<void> _manualSync() async {
+    setState(() => _isSyncing = true);
+
+    final result = await _syncService.syncAll(force: true);
+
+    if (mounted) {
+      setState(() => _isSyncing = false);
+
+      // Refresh UI
+      final inventoryProvider =
+          Provider.of<InventoryProvider>(context, listen: false);
+      await inventoryProvider.refresh();
+      await _loadRecentActivities();
+
+      // Show result
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result['success']
+              ? ' ${result['message']}\n📊 Products: ${result['productsCount']}'
+              : '❌ ${result['message']}'),
+          backgroundColor: result['success'] ? Colors.green : Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
     }
   }
 
@@ -88,6 +107,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         title: Text(l10n.dashboard),
         actions: [
+          // 🔄 Sync Button
+          IconButton(
+            icon: _isSyncing
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : const Icon(Icons.cloud_sync),
+            onPressed: _isSyncing ? null : _manualSync,
+            tooltip: 'Đồng bộ từ Supabase',
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
@@ -113,6 +147,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // ❌ ERROR STATE
+              if (inventoryProvider.hasError) ...[
+                _buildErrorWidget(context, inventoryProvider),
+                const SizedBox(height: 24),
+              ],
+
               // Welcome Message
               Text(
                 '${l10n.welcome}, ${inventoryProvider.totalProducts} ${l10n.products.toLowerCase()}!',
@@ -120,6 +160,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     .textTheme
                     .headlineSmall
                     ?.copyWith(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
 
               const SizedBox(height: 24),
@@ -165,6 +207,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
 
+              const SizedBox(height: 24),
+
               // Quick Actions
               Text(
                 'Quick Actions / Hành động nhanh',
@@ -172,6 +216,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     .textTheme
                     .titleLarge
                     ?.copyWith(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
               ),
 
               const SizedBox(height: 16),
@@ -240,6 +285,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     .textTheme
                     .titleLarge
                     ?.copyWith(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
               ),
 
               const SizedBox(height: 16),
@@ -406,6 +452,80 @@ class _DashboardScreenState extends State<DashboardScreen> {
               );
             },
             child: const Text('View Inventory / Xem kho'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// ❌ Widget hiển thị lỗi khi không tải được data từ Supabase
+  Widget _buildErrorWidget(BuildContext context, InventoryProvider provider) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.red.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.red.shade300, width: 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.error_outline, color: Colors.red.shade700, size: 32),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  '❌ Lỗi Tải Dữ Liệu',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Colors.red.shade900,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            provider.errorMessage ?? 'Không thể kết nối đến Supabase',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.red.shade800,
+                  height: 1.5,
+                ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    await provider.refresh();
+                    await _loadRecentActivities();
+                  },
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Thử lại'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red.shade700,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _manualSync,
+                  icon: const Icon(Icons.cloud_sync),
+                  label: const Text('Đồng bộ'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red.shade700,
+                    side: BorderSide(color: Colors.red.shade700),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

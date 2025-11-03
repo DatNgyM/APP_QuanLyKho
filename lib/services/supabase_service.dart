@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/product.dart';
+import '../models/category.dart';
+import '../models/brand.dart';
 
 class SupabaseService {
   static final SupabaseService _instance = SupabaseService._internal();
@@ -46,40 +48,94 @@ class SupabaseService {
   /// Stream để lắng nghe thay đổi trạng thái auth
   Stream<AuthState> get authStateChanges => client.auth.onAuthStateChange;
 
+  // ==================== CATEGORY & BRAND METHODS ====================
+
+  /// Lấy tất cả categories
+  Future<List<Category>> getCategories() async {
+    try {
+      final response = await client
+          .from('categories')
+          .select()
+          .order('id', ascending: true);
+
+      return (response as List)
+          .map((json) => Category.fromJson(json))
+          .toList();
+    } catch (e) {
+      debugPrint('❌ Error loading categories: $e');
+      return [];
+    }
+  }
+
+  /// Lấy tất cả brands
+  Future<List<Brand>> getBrands() async {
+    try {
+      final response = await client
+          .from('brands')
+          .select()
+          .order('id', ascending: true);
+
+      return (response as List)
+          .map((json) => Brand.fromJson(json))
+          .toList();
+    } catch (e) {
+      debugPrint('❌ Error loading brands: $e');
+      return [];
+    }
+  }
+
   // ==================== PRODUCT METHODS ====================
 
-  /// Lấy tất cả products
+  /// Lấy tất cả products với categories và brands
   Future<List<Product>> getProducts() async {
     try {
+      debugPrint('🔄 Fetching products from Supabase...');
+      
+      // Fetch categories và brands trước
+      final categories = await getCategories();
+      final brands = await getBrands();
+      
+      debugPrint('📦 Loaded ${categories.length} categories, ${brands.length} brands');
+      
+      // Map category_id -> name
+      final categoryMap = {for (var c in categories) c.id: c.name};
+      // Map brand_id -> name
+      final brandMap = {for (var b in brands) b.id: b.name};
+
       final response = await client
           .from('products')
           .select()
           .order('created_at', ascending: false);
+
+      debugPrint('📱 Loaded ${(response as List).length} products from Supabase');
 
       return (response as List)
           .map((json) => Product.fromJson({
                 'id': json['id'].toString(),
                 'name': json['name'] ?? 'Unknown Product',
                 'code': json['sku'] ?? json['code'] ?? 'N/A',
-                'category': _getCategoryName(json['category_id']),
+                'category_id': json['category_id'],
+                'category': categoryMap[json['category_id']] ?? _getCategoryName(json['category_id']),
+                'brand_id': json['brand_id'],
+                'supplier': brandMap[json['brand_id']] ?? _getBrandName(json['brand_id']),
                 'quantity': json['quantity'] ?? 0,
-                'price': (json['price'] is int) 
-                    ? (json['price'] as int).toDouble()
-                    : (json['price'] ?? 0.0),
+                'price': json['price'],
                 'description': json['description'] ?? '',
-                'imageUrl': json['image_url'],
-                'supplier': _getBrandName(json['brand_id']),
-                'minimumQuantity': json['minimum_quantity'] ?? 5,
-                'dateAdded': json['created_at'] != null 
-                    ? DateTime.parse(json['created_at'])
-                    : DateTime.now(),
-                'lastUpdated': json['updated_at'] != null
-                    ? DateTime.parse(json['updated_at'])
-                    : DateTime.now(),
+                'image_url': json['image_url'],
+                'images': json['images'],
+                'rating': json['rating'],
+                'reviews': json['reviews'],
+                'discount': json['discount'],
+                'badges': json['badges'],
+                'features': json['features'],
+                'specifications': json['specifications'],
+                'minimum_quantity': json['minimum_quantity'] ?? 5,
+                'created_at': json['created_at'],
               }))
           .toList();
     } catch (e) {
       debugPrint('❌ Error loading products from Supabase: $e');
+      debugPrint('Stack trace: ${StackTrace.current}');
       rethrow;
     }
   }
@@ -206,24 +262,25 @@ class SupabaseService {
   }
 
   // ==================== ACTIVITY METHODS ====================
-
-  /// Lấy các hoạt động gần đây
-  Future<List<Map<String, dynamic>>> getRecentActivities(
-      {int limit = 10}) async {
-    try {
-      final response = await client
-          .from('activities')
-          .select()
-          .order('created_at', ascending: false)
-          .limit(limit);
-
-      return List<Map<String, dynamic>>.from(response);
-    } catch (e) {
-      debugPrint('⚠️ Activities table không tồn tại hoặc lỗi: $e');
-      // Return empty nếu bảng không tồn tại
-      return [];
-    }
-  }
+  // ❌ KHÔNG DÙNG - Activities lưu local để tối ưu Supabase
+  
+  // /// Lấy các hoạt động gần đây
+  // Future<List<Map<String, dynamic>>> getRecentActivities(
+  //     {int limit = 10}) async {
+  //   try {
+  //     final response = await client
+  //         .from('activities')
+  //         .select()
+  //         .order('created_at', ascending: false)
+  //         .limit(limit);
+  //
+  //     return List<Map<String, dynamic>>.from(response);
+  //   } catch (e) {
+  //     debugPrint('⚠️ Activities table không tồn tại hoặc lỗi: $e');
+  //     // Return empty nếu bảng không tồn tại
+  //     return [];
+  //   }
+  // }
 
   // ==================== STATISTICS METHODS ====================
 

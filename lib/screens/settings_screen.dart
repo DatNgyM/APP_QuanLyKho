@@ -56,6 +56,8 @@ class SettingsScreen extends StatelessWidget {
                                 .textTheme
                                 .titleLarge
                                 ?.copyWith(fontWeight: FontWeight.bold),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -70,6 +72,8 @@ class SettingsScreen extends StatelessWidget {
                                       ?.color
                                       ?.withOpacity(0.7),
                                 ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
@@ -93,6 +97,7 @@ class SettingsScreen extends StatelessWidget {
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
             )
                 .animate(delay: 100.ms)
                 .fadeIn(duration: 600.ms)
@@ -138,6 +143,7 @@ class SettingsScreen extends StatelessWidget {
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
             )
                 .animate(delay: 400.ms)
                 .fadeIn(duration: 600.ms)
@@ -211,6 +217,7 @@ class SettingsScreen extends StatelessWidget {
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
             )
                 .animate(delay: 750.ms)
                 .fadeIn(duration: 600.ms)

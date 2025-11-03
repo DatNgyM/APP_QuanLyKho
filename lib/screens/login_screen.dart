@@ -242,6 +242,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           l10n.welcome,
                           style: Theme.of(context).textTheme.headlineMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         )
                         .animate(delay: 200.ms)
                         .fadeIn(duration: 800.ms)
@@ -256,6 +259,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.w600,
                               ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         )
                         .animate(delay: 400.ms)
                         .fadeIn(duration: 800.ms)
@@ -336,24 +342,38 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _rememberMe,
-                              onChanged: (value) {
-                                setState(() {
-                                  _rememberMe = value ?? false;
-                                });
-                              },
-                            ),
-                            Text(l10n.rememberMe),
-                          ],
+                        Flexible(
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: _rememberMe,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _rememberMe = value ?? false;
+                                  });
+                                },
+                              ),
+                              Flexible(
+                                child: Text(
+                                  l10n.rememberMe,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            // TODO: Implement forgot password
-                          },
-                          child: Text(l10n.forgotPassword),
+                        Flexible(
+                          child: TextButton(
+                            onPressed: () {
+                              // TODO: Implement forgot password
+                            },
+                            child: Text(
+                              l10n.forgotPassword,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ),
                       ],
                     ).animate(delay: 800.ms).fadeIn(duration: 800.ms),
@@ -390,8 +410,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 24),
 
                     // Sign Up Section
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text(
                           "Don't have an account? / Chưa có tài khoản?",
@@ -436,6 +457,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'ℹ️ New User? / Người dùng mới?',
                                 style: Theme.of(context).textTheme.titleSmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 8),
                               Text(

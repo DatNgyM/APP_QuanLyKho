@@ -230,6 +230,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
+                    overflow: TextOverflow.ellipsis,
                   ),
 
                   const SizedBox(height: 16),
@@ -281,6 +282,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
+                    overflow: TextOverflow.ellipsis,
                   ),
 
                   const SizedBox(height: 16),
@@ -295,6 +297,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
+                    overflow: TextOverflow.ellipsis,
                   ),
 
                   const SizedBox(height: 16),
@@ -309,6 +312,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                   ),
 
                   const SizedBox(height: 16),
@@ -447,29 +452,33 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   Widget _buildStatItem(
       String title, String value, IconData icon, Color color) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: color, size: 18),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          title,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontSize: 9,
-              ),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
+    return Flexible(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontSize: 9,
+                ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 
@@ -489,31 +498,35 @@ class _ReportsScreenState extends State<ReportsScreen> {
         padding: const EdgeInsets.all(8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: color, size: 26),
+            Icon(icon, color: color, size: 24),
             const SizedBox(height: 6),
-            Expanded(
+            Flexible(
               child: Text(
                 value,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: color,
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 18,
                     ),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontSize: 10,
-                  ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            const SizedBox(height: 4),
+            Flexible(
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontSize: 9,
+                    ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
@@ -618,14 +631,24 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   color: Theme.of(context).primaryColor,
                 ),
               ),
-              title: Text(product.name),
-              subtitle: Text('${product.quantity} units'),
+              title: Text(
+                product.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                '${product.quantity} units',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
               trailing: Text(
                 '\$${value.toStringAsFixed(0)}',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).primaryColor,
                     ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             );
           }).toList(),

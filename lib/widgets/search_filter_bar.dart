@@ -29,7 +29,7 @@ class SearchFilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         boxShadow: [
@@ -75,6 +75,7 @@ class SearchFilterBar extends StatelessWidget {
             children: [
               // Category Filter
               Expanded(
+                flex: 2,
                 child: DropdownButtonFormField<String>(
                   value: selectedCategory,
                   decoration: InputDecoration(
@@ -86,17 +87,19 @@ class SearchFilterBar extends StatelessWidget {
                     filled: true,
                     fillColor: Theme.of(context).colorScheme.background,
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 8,
+                      horizontal: 6,
                       vertical: 4,
                     ),
                     isDense: true,
                   ),
+                  isExpanded: true,
                   items: categories.map((category) {
                     return DropdownMenuItem(
                       value: category,
                       child: Text(
                         category,
                         overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 13),
                       ),
                     );
                   }).toList(),
@@ -108,10 +111,11 @@ class SearchFilterBar extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(width: 16),
+              const SizedBox(width: 6),
 
               // Sort Filter
               Expanded(
+                flex: 2,
                 child: DropdownButtonFormField<String>(
                   value: sortBy,
                   decoration: InputDecoration(
@@ -123,11 +127,12 @@ class SearchFilterBar extends StatelessWidget {
                     filled: true,
                     fillColor: Theme.of(context).colorScheme.background,
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 8,
+                      horizontal: 6,
                       vertical: 4,
                     ),
                     isDense: true,
                   ),
+                  isExpanded: true,
                   items: sortOptions.map((option) {
                     String displayText;
                     switch (option) {
@@ -154,6 +159,7 @@ class SearchFilterBar extends StatelessWidget {
                       child: Text(
                         displayText,
                         overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 13),
                       ),
                     );
                   }).toList(),
@@ -165,22 +171,25 @@ class SearchFilterBar extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
 
               // Sort Direction Toggle
-              IconButton(
-                onPressed: () => onSortDirectionChanged(!sortAscending),
-                icon: Icon(
-                  sortAscending ? Icons.arrow_upward : Icons.arrow_downward,
-                  size: 20,
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                tooltip: sortAscending ? 'Ascending' : 'Descending',
-                style: IconButton.styleFrom(
-                  backgroundColor: Theme.of(
-                    context,
-                  ).primaryColor.withOpacity(0.1),
-                  minimumSize: const Size(40, 40),
+                child: IconButton(
+                  onPressed: () => onSortDirectionChanged(!sortAscending),
+                  icon: Icon(
+                    sortAscending ? Icons.arrow_upward : Icons.arrow_downward,
+                    size: 16,
+                  ),
+                  tooltip: sortAscending ? 'Ascending' : 'Descending',
                   padding: EdgeInsets.zero,
+                  iconSize: 16,
                 ),
               ),
             ],

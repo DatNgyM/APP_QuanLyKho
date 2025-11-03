@@ -70,6 +70,8 @@ class ProductDetailScreen extends StatelessWidget {
                           Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
 
                     const SizedBox(height: 8),
@@ -93,6 +95,8 @@ class ProductDetailScreen extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ).animate().fadeIn(duration: 600.ms, delay: 400.ms),
 
@@ -108,13 +112,14 @@ class ProductDetailScreen extends StatelessWidget {
                     // Description
                     if (product.description.isNotEmpty)
                       ...[
-                        Text(
-                          'Description / Mô tả',
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
+                Text(
+                  'Description / Mô tả',
+                  style:
+                      Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                  overflow: TextOverflow.ellipsis,
+                ),
                         const SizedBox(height: 8),
                         Container(
                           width: double.infinity,
@@ -129,6 +134,8 @@ class ProductDetailScreen extends StatelessWidget {
                           child: Text(
                             product.description,
                             style: Theme.of(context).textTheme.bodyLarge,
+                            maxLines: 10,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ].animate().fadeIn(duration: 600.ms, delay: 800.ms),
@@ -318,6 +325,8 @@ class ProductDetailScreen extends StatelessWidget {
                         color: color,
                         fontWeight: FontWeight.w500,
                       ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -329,6 +338,8 @@ class ProductDetailScreen extends StatelessWidget {
                   color: color,
                   fontWeight: FontWeight.bold,
                 ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
