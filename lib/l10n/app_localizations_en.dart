@@ -259,4 +259,106 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restore => 'Restore';
+
+  @override
+  String get orders => 'Orders';
+
+  @override
+  String get orderList => 'Order List';
+
+  @override
+  String get orderDetails => 'Order Details';
+
+  @override
+  String get createOrder => 'Create Order';
+
+  @override
+  String get importOrder => 'Import Goods';
+
+  @override
+  String get exportOrder => 'Export Goods';
+
+  @override
+  String get orderStatus => 'Status';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get processing => 'Processing';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get cancelled => 'Cancelled';
+
+  @override
+  String get totalOrders => 'Total Orders';
+
+  @override
+  String get importOrders => 'Import Orders';
+
+  @override
+  String get exportOrders => 'Export Orders';
+
+  @override
+  String get customer => 'Customer';
+
+  @override
+  String get partnerName => 'Partner Name';
+
+  @override
+  String get partnerPhone => 'Phone Number';
+
+  @override
+  String get partnerAddress => 'Address';
+
+  @override
+  String get orderDate => 'Order Date';
+
+  @override
+  String get totalAmount => 'Total Amount';
+
+  @override
+  String get updateStatus => 'Update Status';
+
+  @override
+  String get cancelOrder => 'Cancel Order';
+
+  @override
+  String get selectProduct => 'Select Product';
+
+  @override
+  String get productQuantity => 'Quantity';
+
+  @override
+  String get unitPrice => 'Unit Price';
+
+  @override
+  String get orderCreated => 'Order created successfully';
+
+  @override
+  String get orderUpdated => 'Order updated successfully';
+
+  @override
+  String get orderCancelled => 'Order cancelled';
+
+  @override
+  String get confirmCancel => 'Are you sure you want to cancel this order?';
+
+  @override
+  String get noOrders => 'No orders yet';
+
+  @override
+  String get searchOrders => 'Search orders';
+
+  @override
+  String get filterByStatus => 'Filter by status';
+
+  @override
+  String get allOrders => 'All';
+
+  @override
+  String get notes => 'Notes';
 }

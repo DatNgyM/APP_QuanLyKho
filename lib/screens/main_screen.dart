@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../utils/app_localizations.dart';
 import 'dashboard_screen.dart';
 import 'inventory_screen.dart';
+import 'orders_screen.dart';
 import 'reports_screen.dart';
 import 'settings_screen.dart';
 
@@ -19,6 +20,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     const DashboardScreen(),
     const InventoryScreen(),
+    const OrdersScreen(),
     const ReportsScreen(),
     const SettingsScreen(),
   ];
@@ -47,6 +49,11 @@ class _MainScreenState extends State<MainScreen> {
             icon: const Icon(Icons.inventory_2_outlined),
             activeIcon: const Icon(Icons.inventory_2),
             label: l10n.inventory,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.receipt_long_outlined),
+            activeIcon: const Icon(Icons.receipt_long),
+            label: 'Đơn hàng', // Will update with l10n.orders
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.analytics_outlined),

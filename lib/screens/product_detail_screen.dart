@@ -19,144 +19,161 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final inventoryProvider = Provider.of<InventoryProvider>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(product.name),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () => _navigateToEdit(context),
-            tooltip: 'Edit Product',
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () =>
-                _showDeleteDialog(context, l10n, inventoryProvider),
-            tooltip: 'Delete Product',
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Product Image
-            _buildProductImage(context)
-                .animate()
-                .fadeIn(duration: 600.ms)
-                .scale(
-                    begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
+    // Dùng Consumer để tự động rebuild khi data thay đổi
+    return Consumer<InventoryProvider>(
+      builder: (context, inventoryProvider, child) {
+        // Lấy product MỚI NHẤT từ Provider
+        final currentProduct = inventoryProvider.products.firstWhere(
+          (p) => p.id == product.id,
+          orElse: () => product, // Fallback nếu không tìm thấy
+        );
 
-            const SizedBox(height: 24),
-
-            // Product Information Card
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(currentProduct.name),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () => _navigateToEdit(context, currentProduct),
+                tooltip: 'Edit Product',
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Product Name
-                    Text(
-                      product.name,
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => _showDeleteDialog(
+                    context, l10n, inventoryProvider, currentProduct),
+                tooltip: 'Delete Product',
+              ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Product Image
+                _buildProductImage(context, currentProduct)
+                    .animate()
+                    .fadeIn(duration: 600.ms)
+                    .scale(
+                        begin: const Offset(0.8, 0.8),
+                        end: const Offset(1.0, 1.0)),
+
+                const SizedBox(height: 24),
+
+                // Product Information Card
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Product Name
+                        Text(
+                          currentProduct.name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
 
-                    const SizedBox(height: 8),
-
-                    // Category Badge
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.3),
-                        ),
-                      ),
-                      child: Text(
-                        product.category,
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ).animate().fadeIn(duration: 600.ms, delay: 400.ms),
-
-                    const SizedBox(height: 24),
-
-                    // Product Details Grid
-                    _buildDetailsGrid(context)
-                        .animate()
-                        .fadeIn(duration: 600.ms, delay: 600.ms),
-
-                    const SizedBox(height: 24),
-
-                    // Description
-                    if (product.description.isNotEmpty)
-                      ...[
-                Text(
-                  'Description / Mô tả',
-                  style:
-                      Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                  overflow: TextOverflow.ellipsis,
-                ),
                         const SizedBox(height: 8),
+
+                        // Category Badge
                         Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .surfaceVariant
-                                .withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(12),
+                            color:
+                                Theme.of(context).primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.3),
+                            ),
                           ),
                           child: Text(
-                            product.description,
-                            style: Theme.of(context).textTheme.bodyLarge,
-                            maxLines: 10,
+                            currentProduct.category,
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ].animate().fadeIn(duration: 600.ms, delay: 800.ms),
+                        ).animate().fadeIn(duration: 600.ms, delay: 400.ms),
 
-                    const SizedBox(height: 24),
+                        const SizedBox(height: 24),
 
-                    // Date Information
-                    _buildDateInfo(context)
-                        .animate()
-                        .fadeIn(duration: 600.ms, delay: 1000.ms),
-                  ],
+                        // Product Details Grid
+                        _buildDetailsGrid(context, currentProduct)
+                            .animate()
+                            .fadeIn(duration: 600.ms, delay: 600.ms),
+
+                        const SizedBox(height: 24),
+
+                        // Description
+                        if (currentProduct.description.isNotEmpty)
+                          ...[
+                            Text(
+                              'Description / Mô tả',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceVariant
+                                    .withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                currentProduct.description,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                                maxLines: 10,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ].animate().fadeIn(duration: 600.ms, delay: 800.ms),
+
+                        const SizedBox(height: 24),
+
+                        // Date Information
+                        _buildDateInfo(context, currentProduct)
+                            .animate()
+                            .fadeIn(duration: 600.ms, delay: 1000.ms),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildProductImage(BuildContext context) {
+  Widget _buildProductImage(BuildContext context, Product currentProduct) {
     return Center(
       child: Container(
         width: 200,
@@ -173,14 +190,14 @@ class ProductDetailScreen extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: _getProductImage(context),
+          child: _getProductImage(context, currentProduct),
         ),
       ),
     );
   }
 
-  Widget _getProductImage(BuildContext context) {
-    if (product.imageUrl == null || product.imageUrl!.isEmpty) {
+  Widget _getProductImage(BuildContext context, Product currentProduct) {
+    if (currentProduct.imageUrl == null || currentProduct.imageUrl!.isEmpty) {
       return Container(
         color: Theme.of(context).colorScheme.surfaceVariant,
         child: Icon(
@@ -191,9 +208,9 @@ class ProductDetailScreen extends StatelessWidget {
       );
     }
 
-    if (product.imageUrl!.startsWith('http')) {
+    if (currentProduct.imageUrl!.startsWith('http')) {
       return Image.network(
-        product.imageUrl!,
+        currentProduct.imageUrl!,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => Container(
           color: Theme.of(context).colorScheme.surfaceVariant,
@@ -206,7 +223,7 @@ class ProductDetailScreen extends StatelessWidget {
       );
     } else {
       return Image.file(
-        File(product.imageUrl!),
+        File(currentProduct.imageUrl!),
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => Container(
           color: Theme.of(context).colorScheme.surfaceVariant,
@@ -220,7 +237,7 @@ class ProductDetailScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildDetailsGrid(BuildContext context) {
+  Widget _buildDetailsGrid(BuildContext context, Product currentProduct) {
     return Column(
       children: [
         // Row 1: Price and Quantity
@@ -230,7 +247,7 @@ class ProductDetailScreen extends StatelessWidget {
               child: _buildDetailCard(
                 context,
                 'Price / Giá',
-                '\$${product.price.toStringAsFixed(2)}',
+                '\$${currentProduct.price.toStringAsFixed(2)}',
                 Icons.attach_money,
                 Theme.of(context).primaryColor,
               ),
@@ -240,9 +257,9 @@ class ProductDetailScreen extends StatelessWidget {
               child: _buildDetailCard(
                 context,
                 'Quantity / Số lượng',
-                '${product.quantity}',
+                '${currentProduct.quantity}',
                 Icons.inventory,
-                product.quantity <= product.minimumQuantity
+                currentProduct.quantity <= currentProduct.minimumQuantity
                     ? Theme.of(context).colorScheme.error
                     : Colors.green,
               ),
@@ -258,7 +275,7 @@ class ProductDetailScreen extends StatelessWidget {
               child: _buildDetailCard(
                 context,
                 'Product Code / Mã SP',
-                product.code,
+                currentProduct.code,
                 Icons.qr_code,
                 Colors.blue,
               ),
@@ -268,7 +285,7 @@ class ProductDetailScreen extends StatelessWidget {
               child: _buildDetailCard(
                 context,
                 'Supplier / Nhà CC',
-                product.supplier,
+                currentProduct.supplier,
                 Icons.business,
                 Colors.orange,
               ),
@@ -281,9 +298,9 @@ class ProductDetailScreen extends StatelessWidget {
         _buildDetailCard(
           context,
           'Minimum Quantity / SL tối thiểu',
-          '${product.minimumQuantity}',
+          '${currentProduct.minimumQuantity}',
           Icons.warning,
-          product.quantity <= product.minimumQuantity
+          currentProduct.quantity <= currentProduct.minimumQuantity
               ? Theme.of(context).colorScheme.error
               : Colors.grey,
         ),
@@ -346,7 +363,7 @@ class ProductDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDateInfo(BuildContext context) {
+  Widget _buildDateInfo(BuildContext context, Product currentProduct) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -377,7 +394,7 @@ class ProductDetailScreen extends StatelessWidget {
                       ),
                 ),
                 Text(
-                  _formatDate(product.dateAdded),
+                  _formatDate(currentProduct.dateAdded),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
@@ -394,7 +411,7 @@ class ProductDetailScreen extends StatelessWidget {
                       ),
                 ),
                 Text(
-                  _formatDate(product.lastUpdated),
+                  _formatDate(currentProduct.lastUpdated),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
@@ -422,10 +439,10 @@ class ProductDetailScreen extends StatelessWidget {
     }
   }
 
-  void _navigateToEdit(BuildContext context) {
+  void _navigateToEdit(BuildContext context, Product currentProduct) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => AddProductScreen(product: product),
+        builder: (context) => AddProductScreen(product: currentProduct),
       ),
     );
   }
@@ -434,6 +451,7 @@ class ProductDetailScreen extends StatelessWidget {
     BuildContext context,
     AppLocalizations l10n,
     InventoryProvider inventoryProvider,
+    Product currentProduct,
   ) {
     showDialog(
       context: context,
@@ -461,7 +479,7 @@ class ProductDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Product: ${product.name}',
+              'Product: ${currentProduct.name}',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).primaryColor,
@@ -483,7 +501,7 @@ class ProductDetailScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              inventoryProvider.deleteProduct(product.id);
+              inventoryProvider.deleteProduct(currentProduct.id);
               Navigator.of(context).pop(); // Close dialog
               Navigator.of(context).pop(); // Go back to inventory
               ScaffoldMessenger.of(context).showSnackBar(

@@ -9,7 +9,9 @@ class AuthProvider extends ChangeNotifier {
   User? get currentUser => _currentUser;
   bool get isAuthenticated => _currentUser != null;
   String? get userEmail => _currentUser?.email;
-  String? get userName => _currentUser?.userMetadata?['full_name'] ?? _currentUser?.email?.split('@')[0];
+  String? get userName =>
+      _currentUser?.userMetadata?['full_name'] ??
+      _currentUser?.email?.split('@')[0];
   bool get isLoading => _isLoading;
 
   AuthProvider() {
@@ -19,7 +21,7 @@ class AuthProvider extends ChangeNotifier {
   void _initialize() {
     // Get current user
     _currentUser = SupabaseService.client.auth.currentUser;
-    
+
     // Listen to auth state changes
     SupabaseService.client.auth.onAuthStateChange.listen((data) {
       _currentUser = data.session?.user;
@@ -36,12 +38,15 @@ class AuthProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
+      // ✅ signInWithEmail giờ trả về Map với user, profile, role_id, role_name
       final response = await SupabaseService().signInWithEmail(email, password);
-      _currentUser = response.user;
-      
+
+      // ✅ Lấy user từ Map
+      _currentUser = response['user'] as User?;
+
       _isLoading = false;
       notifyListeners();
-      return response.user != null;
+      return _currentUser != null;
     } catch (e) {
       _isLoading = false;
       _errorMessage = e.toString();
@@ -56,9 +61,10 @@ class AuthProvider extends ChangeNotifier {
       _isLoading = true;
       notifyListeners();
 
-      final response = await SupabaseService().signUpWithEmail(email, password, name);
+      final response =
+          await SupabaseService().signUpWithEmail(email, password, name);
       _currentUser = response.user;
-      
+
       _isLoading = false;
       notifyListeners();
       return response.user != null;
@@ -80,4 +86,3 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 }
-

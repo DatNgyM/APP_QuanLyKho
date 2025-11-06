@@ -259,4 +259,106 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get restore => 'Khôi phục';
+
+  @override
+  String get orders => 'Đơn hàng';
+
+  @override
+  String get orderList => 'Danh sách đơn hàng';
+
+  @override
+  String get orderDetails => 'Chi tiết đơn hàng';
+
+  @override
+  String get createOrder => 'Tạo đơn hàng';
+
+  @override
+  String get importOrder => 'Nhập hàng';
+
+  @override
+  String get exportOrder => 'Xuất hàng';
+
+  @override
+  String get orderStatus => 'Trạng thái';
+
+  @override
+  String get pending => 'Chờ xác nhận';
+
+  @override
+  String get processing => 'Đang xử lý';
+
+  @override
+  String get completed => 'Hoàn thành';
+
+  @override
+  String get cancelled => 'Đã hủy';
+
+  @override
+  String get totalOrders => 'Tổng đơn';
+
+  @override
+  String get importOrders => 'Đơn nhập';
+
+  @override
+  String get exportOrders => 'Đơn xuất';
+
+  @override
+  String get customer => 'Khách hàng';
+
+  @override
+  String get partnerName => 'Tên đối tác';
+
+  @override
+  String get partnerPhone => 'Số điện thoại';
+
+  @override
+  String get partnerAddress => 'Địa chỉ';
+
+  @override
+  String get orderDate => 'Ngày tạo';
+
+  @override
+  String get totalAmount => 'Tổng tiền';
+
+  @override
+  String get updateStatus => 'Cập nhật trạng thái';
+
+  @override
+  String get cancelOrder => 'Hủy đơn';
+
+  @override
+  String get selectProduct => 'Chọn sản phẩm';
+
+  @override
+  String get productQuantity => 'Số lượng';
+
+  @override
+  String get unitPrice => 'Đơn giá';
+
+  @override
+  String get orderCreated => 'Đã tạo đơn hàng';
+
+  @override
+  String get orderUpdated => 'Đã cập nhật đơn hàng';
+
+  @override
+  String get orderCancelled => 'Đã hủy đơn hàng';
+
+  @override
+  String get confirmCancel => 'Bạn có chắc muốn hủy đơn này?';
+
+  @override
+  String get noOrders => 'Chưa có đơn hàng nào';
+
+  @override
+  String get searchOrders => 'Tìm kiếm đơn hàng';
+
+  @override
+  String get filterByStatus => 'Lọc theo trạng thái';
+
+  @override
+  String get allOrders => 'Tất cả';
+
+  @override
+  String get notes => 'Ghi chú';
 }

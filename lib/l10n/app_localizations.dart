@@ -601,6 +601,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore'**
   String get restore;
+
+  /// No description provided for @orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get orders;
+
+  /// No description provided for @orderList.
+  ///
+  /// In en, this message translates to:
+  /// **'Order List'**
+  String get orderList;
+
+  /// No description provided for @orderDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Details'**
+  String get orderDetails;
+
+  /// No description provided for @createOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Order'**
+  String get createOrder;
+
+  /// No description provided for @importOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Goods'**
+  String get importOrder;
+
+  /// No description provided for @exportOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Goods'**
+  String get exportOrder;
+
+  /// No description provided for @orderStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get orderStatus;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get processing;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelled;
+
+  /// No description provided for @totalOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Orders'**
+  String get totalOrders;
+
+  /// No description provided for @importOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Orders'**
+  String get importOrders;
+
+  /// No description provided for @exportOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Orders'**
+  String get exportOrders;
+
+  /// No description provided for @customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get customer;
+
+  /// No description provided for @partnerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Partner Name'**
+  String get partnerName;
+
+  /// No description provided for @partnerPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get partnerPhone;
+
+  /// No description provided for @partnerAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get partnerAddress;
+
+  /// No description provided for @orderDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Date'**
+  String get orderDate;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get totalAmount;
+
+  /// No description provided for @updateStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Status'**
+  String get updateStatus;
+
+  /// No description provided for @cancelOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Order'**
+  String get cancelOrder;
+
+  /// No description provided for @selectProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Product'**
+  String get selectProduct;
+
+  /// No description provided for @productQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get productQuantity;
+
+  /// No description provided for @unitPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit Price'**
+  String get unitPrice;
+
+  /// No description provided for @orderCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Order created successfully'**
+  String get orderCreated;
+
+  /// No description provided for @orderUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Order updated successfully'**
+  String get orderUpdated;
+
+  /// No description provided for @orderCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Order cancelled'**
+  String get orderCancelled;
+
+  /// No description provided for @confirmCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this order?'**
+  String get confirmCancel;
+
+  /// No description provided for @noOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders yet'**
+  String get noOrders;
+
+  /// No description provided for @searchOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Search orders'**
+  String get searchOrders;
+
+  /// No description provided for @filterByStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by status'**
+  String get filterByStatus;
+
+  /// No description provided for @allOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allOrders;
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
 }
 
 class _AppLocalizationsDelegate

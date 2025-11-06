@@ -37,18 +37,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _priceController.text = product.price.toString();
     _quantityController.text = product.quantity.toString();
     _minimumQuantityController.text = product.minimumQuantity.toString();
-    _supplierController.text = product.supplier;
     _descriptionController.text = product.description;
-    _selectedCategory = product.category;
+    
+    // Map category_id từ product
+    _selectedCategoryId = product.categoryId;
+    
+    // Map brand_id từ product
+    _selectedBrandId = product.brandId;
   }
 
   final _priceController = TextEditingController();
   final _quantityController = TextEditingController();
   final _minimumQuantityController = TextEditingController();
-  final _supplierController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  String _selectedCategory = 'Electronics';
+  int? _selectedCategoryId;
+  int? _selectedBrandId;
   bool _isLoading = false;
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
@@ -60,7 +64,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _priceController.dispose();
     _quantityController.dispose();
     _minimumQuantityController.dispose();
-    _supplierController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
@@ -161,25 +164,33 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     try {
       final now = DateTime.now();
+      final inventoryProvider =
+          Provider.of<InventoryProvider>(context, listen: false);
+      
+      // Lấy tên category và brand từ ID
+      final selectedCategory = inventoryProvider.categoriesList
+          .firstWhere((c) => c.id == _selectedCategoryId);
+      final selectedBrand = inventoryProvider.brandsList
+          .firstWhere((b) => b.id == _selectedBrandId);
+      
       final product = Product(
         id: widget.product?.id ??
             DateTime.now().millisecondsSinceEpoch.toString(),
         name: _nameController.text.trim(),
         code: _codeController.text.trim(),
-        category: _selectedCategory,
+        category: selectedCategory.name,
+        categoryId: _selectedCategoryId,
+        supplier: selectedBrand.name,
+        brandId: _selectedBrandId,
         quantity: int.parse(_quantityController.text),
         price: double.parse(_priceController.text),
         description: _descriptionController.text.trim(),
         imageUrl: _selectedImage?.path ??
             widget.product?.imageUrl, // Store local file path for now
-        supplier: _supplierController.text.trim(),
         minimumQuantity: int.parse(_minimumQuantityController.text),
         dateAdded: widget.product?.dateAdded ?? now,
         lastUpdated: now,
       );
-
-      final inventoryProvider =
-          Provider.of<InventoryProvider>(context, listen: false);
 
       if (widget.product == null) {
         await inventoryProvider.addProduct(product);
@@ -368,31 +379,43 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
                       const SizedBox(height: 16),
 
-                      // Category
-                      DropdownButtonFormField<String>(
-                        value: _selectedCategory,
-                        decoration: InputDecoration(
-                          labelText: '${l10n.category} *',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          prefixIcon: const Icon(Icons.category),
-                        ),
-                        items: const [
-                          DropdownMenuItem(
-                              value: 'Electronics', child: Text('Electronics')),
-                          DropdownMenuItem(
-                              value: 'Clothing', child: Text('Clothing')),
-                          DropdownMenuItem(
-                              value: 'Books', child: Text('Books')),
-                          DropdownMenuItem(value: 'Food', child: Text('Food')),
-                          DropdownMenuItem(
-                              value: 'Other', child: Text('Other')),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedCategory = value!;
-                          });
+                      // Category - Dynamic từ Supabase
+                      Consumer<InventoryProvider>(
+                        builder: (context, inventoryProvider, child) {
+                          final categories = inventoryProvider.categoriesList;
+                          
+                          // Set default nếu chưa có
+                          if (_selectedCategoryId == null && categories.isNotEmpty) {
+                            _selectedCategoryId = categories.first.id;
+                          }
+                          
+                          return DropdownButtonFormField<int>(
+                            value: _selectedCategoryId,
+                            decoration: InputDecoration(
+                              labelText: '${l10n.category} *',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              prefixIcon: const Icon(Icons.category),
+                            ),
+                            items: categories.map((category) {
+                              return DropdownMenuItem<int>(
+                                value: category.id,
+                                child: Text(category.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedCategoryId = value;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please select category / Vui lòng chọn danh mục';
+                              }
+                              return null;
+                            },
+                          );
                         },
                       ),
                     ],
@@ -515,20 +538,44 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 ),
                       ),
                       const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _supplierController,
-                        decoration: InputDecoration(
-                          labelText: '${l10n.supplier} *',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          prefixIcon: const Icon(Icons.business),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter supplier / Vui lòng nhập nhà cung cấp';
+                      
+                      // Brand/Supplier - Dynamic từ Supabase
+                      Consumer<InventoryProvider>(
+                        builder: (context, inventoryProvider, child) {
+                          final brands = inventoryProvider.brandsList;
+                          
+                          // Set default nếu chưa có
+                          if (_selectedBrandId == null && brands.isNotEmpty) {
+                            _selectedBrandId = brands.first.id;
                           }
-                          return null;
+                          
+                          return DropdownButtonFormField<int>(
+                            value: _selectedBrandId,
+                            decoration: InputDecoration(
+                              labelText: '${l10n.supplier} / Brand *',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              prefixIcon: const Icon(Icons.business),
+                            ),
+                            items: brands.map((brand) {
+                              return DropdownMenuItem<int>(
+                                value: brand.id,
+                                child: Text(brand.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedBrandId = value;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please select brand / Vui lòng chọn thương hiệu';
+                              }
+                              return null;
+                            },
+                          );
                         },
                       ),
                       const SizedBox(height: 16),

@@ -7,6 +7,7 @@ import '../providers/theme_provider.dart';
 import '../providers/auth_provider.dart';
 import '../utils/app_localizations.dart';
 import '../utils/supabase_test_helper.dart';
+import '../utils/product_test_helper.dart';
 import 'login_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -52,9 +53,7 @@ class SettingsScreen extends StatelessWidget {
                         children: [
                           Text(
                             authProvider.userName ?? 'User / Người dùng',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
+                            style: Theme.of(context).textTheme.titleLarge
                                 ?.copyWith(fontWeight: FontWeight.bold),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -62,9 +61,7 @@ class SettingsScreen extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             authProvider.userEmail ?? 'user@example.com',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
+                            style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   color: Theme.of(context)
                                       .textTheme
@@ -93,12 +90,12 @@ class SettingsScreen extends StatelessWidget {
 
             // App Settings
             Text(
-              'App Settings / Cài đặt ứng dụng',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              overflow: TextOverflow.ellipsis,
-            )
+                  'App Settings / Cài đặt ứng dụng',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                )
                 .animate(delay: 100.ms)
                 .fadeIn(duration: 600.ms)
                 .slideX(begin: -0.3, end: 0),
@@ -107,14 +104,14 @@ class SettingsScreen extends StatelessWidget {
 
             // Language Setting
             Card(
-              child: ListTile(
-                leading: const Icon(Icons.language),
-                title: Text(l10n.language),
-                subtitle: Text(languageProvider.currentLanguageName),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () => languageProvider.toggleLanguage(),
-              ),
-            )
+                  child: ListTile(
+                    leading: const Icon(Icons.language),
+                    title: Text(l10n.language),
+                    subtitle: Text(languageProvider.currentLanguageName),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () => languageProvider.toggleLanguage(),
+                  ),
+                )
                 .animate(delay: 200.ms)
                 .fadeIn(duration: 600.ms)
                 .slideX(begin: -0.3, end: 0),
@@ -123,14 +120,14 @@ class SettingsScreen extends StatelessWidget {
 
             // Theme Setting
             Card(
-              child: ListTile(
-                leading: const Icon(Icons.palette),
-                title: Text(l10n.theme),
-                subtitle: Text(themeProvider.currentThemeName),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () => themeProvider.toggleTheme(),
-              ),
-            )
+                  child: ListTile(
+                    leading: const Icon(Icons.palette),
+                    title: Text(l10n.theme),
+                    subtitle: Text(themeProvider.currentThemeName),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () => themeProvider.toggleTheme(),
+                  ),
+                )
                 .animate(delay: 300.ms)
                 .fadeIn(duration: 600.ms)
                 .slideX(begin: -0.3, end: 0),
@@ -139,12 +136,12 @@ class SettingsScreen extends StatelessWidget {
 
             // App Information
             Text(
-              'App Information / Thông tin ứng dụng',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              overflow: TextOverflow.ellipsis,
-            )
+                  'App Information / Thông tin ứng dụng',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                )
                 .animate(delay: 400.ms)
                 .fadeIn(duration: 600.ms)
                 .slideX(begin: -0.3, end: 0),
@@ -153,20 +150,20 @@ class SettingsScreen extends StatelessWidget {
 
             // Notifications
             Card(
-              child: ListTile(
-                leading: const Icon(Icons.notifications),
-                title: Text(l10n.notifications),
-                subtitle: const Text(
-                  'Manage notifications / Quản lý thông báo',
-                ),
-                trailing: Switch(
-                  value: true,
-                  onChanged: (value) {
-                    // TODO: Implement notification toggle
-                  },
-                ),
-              ),
-            )
+                  child: ListTile(
+                    leading: const Icon(Icons.notifications),
+                    title: Text(l10n.notifications),
+                    subtitle: const Text(
+                      'Manage notifications / Quản lý thông báo',
+                    ),
+                    trailing: Switch(
+                      value: true,
+                      onChanged: (value) {
+                        // TODO: Implement notification toggle
+                      },
+                    ),
+                  ),
+                )
                 .animate(delay: 500.ms)
                 .fadeIn(duration: 600.ms)
                 .slideX(begin: -0.3, end: 0),
@@ -175,18 +172,18 @@ class SettingsScreen extends StatelessWidget {
 
             // Help
             Card(
-              child: ListTile(
-                leading: const Icon(Icons.help),
-                title: Text(l10n.help),
-                subtitle: const Text(
-                  'Get help and support / Nhận trợ giúp và hỗ trợ',
-                ),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  // TODO: Navigate to help screen
-                },
-              ),
-            )
+                  child: ListTile(
+                    leading: const Icon(Icons.help),
+                    title: Text(l10n.help),
+                    subtitle: const Text(
+                      'Get help and support / Nhận trợ giúp và hỗ trợ',
+                    ),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      // TODO: Navigate to help screen
+                    },
+                  ),
+                )
                 .animate(delay: 600.ms)
                 .fadeIn(duration: 600.ms)
                 .slideX(begin: -0.3, end: 0),
@@ -195,16 +192,16 @@ class SettingsScreen extends StatelessWidget {
 
             // About
             Card(
-              child: ListTile(
-                leading: const Icon(Icons.info),
-                title: Text(l10n.about),
-                subtitle: Text('${l10n.version} 1.0.0'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  _showAboutDialog(context, l10n);
-                },
-              ),
-            )
+                  child: ListTile(
+                    leading: const Icon(Icons.info),
+                    title: Text(l10n.about),
+                    subtitle: Text('${l10n.version} 1.0.0'),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      _showAboutDialog(context, l10n);
+                    },
+                  ),
+                )
                 .animate(delay: 700.ms)
                 .fadeIn(duration: 600.ms)
                 .slideX(begin: -0.3, end: 0),
@@ -213,12 +210,12 @@ class SettingsScreen extends StatelessWidget {
 
             // Developer Tools Section
             Text(
-              'Developer Tools / Công cụ Developer',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              overflow: TextOverflow.ellipsis,
-            )
+                  'Developer Tools / Công cụ Developer',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                )
                 .animate(delay: 750.ms)
                 .fadeIn(duration: 600.ms)
                 .slideX(begin: -0.3, end: 0),
@@ -227,23 +224,190 @@ class SettingsScreen extends StatelessWidget {
 
             // Test Supabase Connection
             Card(
-              color: Colors.blue.shade50,
-              child: ListTile(
-                leading: const Icon(Icons.cloud_done, color: Colors.blue),
-                title: const Text(
-                  'Test Supabase Connection',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                subtitle: const Text(
-                  'Check database connection / Kiểm tra kết nối database',
-                ),
-                trailing: const Icon(Icons.play_arrow, color: Colors.blue),
-                onTap: () {
-                  SupabaseTestHelper.showTestDialog(context);
-                },
-              ),
-            )
+                  color: Colors.blue.shade50,
+                  child: ListTile(
+                    leading: const Icon(Icons.cloud_done, color: Colors.blue),
+                    title: const Text(
+                      'Test Supabase Connection',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    subtitle: const Text(
+                      'Check database connection / Kiểm tra kết nối database',
+                    ),
+                    trailing: const Icon(Icons.play_arrow, color: Colors.blue),
+                    onTap: () {
+                      SupabaseTestHelper.showTestDialog(context);
+                    },
+                  ),
+                )
                 .animate(delay: 800.ms)
+                .fadeIn(duration: 600.ms)
+                .slideX(begin: -0.3, end: 0),
+
+            const SizedBox(height: 12),
+
+            // Test CRUD Operations
+            Card(
+                  color: Colors.green.shade50,
+                  child: ListTile(
+                    leading: const Icon(Icons.science, color: Colors.green),
+                    title: const Text(
+                      '🧪 Test CRUD Operations',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    subtitle: const Text(
+                      'Test Create, Read, Update, Delete / Test thêm, đọc, sửa, xóa',
+                    ),
+                    trailing: const Icon(Icons.play_arrow, color: Colors.green),
+                    onTap: () async {
+                      // Show loading dialog
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => const Center(
+                          child: Card(
+                            child: Padding(
+                              padding: EdgeInsets.all(24.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CircularProgressIndicator(),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Running CRUD tests...\nCheck debug console',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+
+                      try {
+                        // Run all CRUD tests
+                        await ProductTestHelper.runAllTests();
+
+                        // Show success
+                        if (context.mounted) {
+                          Navigator.of(context).pop(); // Close loading dialog
+
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Row(
+                                children: [
+                                  Icon(
+                                    Icons.check_circle,
+                                    color: Colors.green,
+                                    size: 32,
+                                  ),
+                                  SizedBox(width: 12),
+                                  Text('✅ Test Complete'),
+                                ],
+                              ),
+                              content: const Text(
+                                'All CRUD tests completed successfully!\n\n'
+                                'Tất cả test CRUD đã hoàn thành thành công!\n\n'
+                                'Check the debug console for detailed results.\n'
+                                'Xem debug console để biết kết quả chi tiết.',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        // Show error
+                        if (context.mounted) {
+                          Navigator.of(context).pop(); // Close loading dialog
+
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Row(
+                                children: [
+                                  Icon(
+                                    Icons.error,
+                                    color: Colors.red,
+                                    size: 32,
+                                  ),
+                                  SizedBox(width: 12),
+                                  Text('❌ Test Failed'),
+                                ],
+                              ),
+                              content: Text(
+                                'Error running tests:\n\n$e\n\n'
+                                'Check the debug console for details.',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                )
+                .animate(delay: 850.ms)
+                .fadeIn(duration: 600.ms)
+                .slideX(begin: -0.3, end: 0),
+
+            const SizedBox(height: 12),
+
+            // Print Statistics
+            Card(
+                  color: Colors.orange.shade50,
+                  child: ListTile(
+                    leading: const Icon(Icons.analytics, color: Colors.orange),
+                    title: const Text(
+                      '📊 Print Database Statistics',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    subtitle: const Text(
+                      'Show database stats / Hiển thị thống kê database',
+                    ),
+                    trailing: const Icon(
+                      Icons.play_arrow,
+                      color: Colors.orange,
+                    ),
+                    onTap: () async {
+                      try {
+                        await ProductTestHelper.printStatistics();
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                '✅ Statistics printed to debug console\n'
+                                'Đã in thống kê ra debug console',
+                              ),
+                              backgroundColor: Colors.green,
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('❌ Error: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                )
+                .animate(delay: 900.ms)
                 .fadeIn(duration: 600.ms)
                 .slideX(begin: -0.3, end: 0),
 
@@ -251,18 +415,19 @@ class SettingsScreen extends StatelessWidget {
 
             // Logout Button
             SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => _showLogoutDialog(context, l10n, authProvider),
-                icon: const Icon(Icons.logout),
-                label: Text(l10n.logout),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-              ),
-            )
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () =>
+                        _showLogoutDialog(context, l10n, authProvider),
+                    icon: const Icon(Icons.logout),
+                    label: Text(l10n.logout),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                  ),
+                )
                 .animate(delay: 900.ms)
                 .fadeIn(duration: 600.ms)
                 .slideY(begin: 0.3, end: 0),
